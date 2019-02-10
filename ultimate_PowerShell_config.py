@@ -110,6 +110,7 @@ def git_setup():
 
     print("Checking if git exists else installing...")
     install_tool("git")
+    
     print("Checking if hub exists else installing...")
     install_tool("hub")
 
