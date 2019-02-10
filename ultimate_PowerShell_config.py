@@ -110,6 +110,8 @@ def git_setup():
 
     print("Checking if git exists else installing...")
     install_tool("git")
+    print("Checking if hub exists else installing...")
+    install_tool("hub")
 
     print("Setting git environment...")
     ps_arg(
@@ -178,7 +180,7 @@ def run_as_admin():
         if install_ans == True:
             install_tool(input("\nProgram name or names > "))
         else:
-            print("Well, this is the end of the program execution")
+            print("Well, this is the end of the program execution \n")
 
         input("Press a key to exit")
     else:
