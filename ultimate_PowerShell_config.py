@@ -5,6 +5,7 @@ import sys
 from shutil import which
 from threading import Timer
 import traceback
+import webbrowser
 
 
 def show_exception_and_exit(exc_type, exc_value, tb):
@@ -43,13 +44,16 @@ def set_ps_exec_policy():
 
 
 def show_output(arg):
+    global res
     while True:
         output = arg.stdout.readline(1)
         if output == b'' and arg.poll() is not None:
             break
         if output:
-            sys.stdout.write(output.decode('utf-8'))
+            res = sys.stdout.write(output.decode('utf-8'))
             sys.stdout.flush()
+    
+    return res
 
 
 # A function to check if the tool/program 'to-be' installed is already available on the system
@@ -92,14 +96,14 @@ def install_tool(prog):
 def input_ans(arg):
     yes = {'yes', 'y', 'ye', ''}
     no = {'no', 'n'}
-
-    choice = input(arg).lower()
-    if choice in yes:
-        return True
-    elif choice in no:
-        return False
-    else:
-        sys.stdout.write("Please respond with 'yes' or 'no'")
+    while True:
+        choice = input(arg).lower()
+        if choice in yes:
+            return True
+        elif choice in no:
+            return False
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' \n")
 
 
 def git_setup():
@@ -131,28 +135,33 @@ def git_setup():
         print("""\nThe above key is successfully copied to clipboard! \n
             You can now Add the public key to your GitHub A/C\n
             See https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/ for more info\n""")
+        
+        op_tut = input_ans("Do you want to open the tutorial right now? y/N > ")
+        if op_tut == True: webbrowser.open("https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account")
+        print("New Tutorial Tab successfully opened! \n")
     else:
         print("Key not copied! \n")
 
     print("Adding Ssh-Agent...")
-    show_output(
-        ps_arg(r'Start-SshAgent;Add-SshKey $env:USERPROFILE\.ssh\{}'.format(key_name)))
+    show_output(ps_arg(r'Start-SshAgent;Add-SshKey $env:USERPROFILE\.ssh\{}'.format(key_name)))
     print("Ssh-Agent successfully added!\n")
 
-    print("Test authentication to GitHub...")
-    show_output(ps_arg(r'ssh -T git@github.com'))
+    tst_auth = input_ans("Do you want to Test authentication to GitHub?(NOTE: Your public key should be added on your Github A/C first.) y/N > ")
+    if tst_auth == True:
+        print("\nTesting authentication to GitHub...")
+        show_output(ps_arg(r'ssh -T git@github.com'))
+    else:
+        print("\nSkipping GitHub authentication test! \n")
 
 
 def config_global_git():
-    config_ans = input_ans(
-        "Do you want to Configure global Git settings? y/N > ")
-    email, username = input(
-        "Enter Your Github email address and username separated with space respectively > ").split()
+    config_ans = input_ans("Do you want to Configure global Git settings? y/N > ")
 
     if config_ans == True:
+        email, username = input("Enter Your Github email address and username separated with space respectively > ").split()
         ps_arg(r'git config --global user.email {};git config --global user.name {};git config --global push.default simple;git config --global core.ignorecase false;git config --global core.autocrlf true'.format(email, username))
     else:
-        print("Global Git settings not configured")
+        print("Global Git settings not configured \n")
 
 # A function to run specific commands with elevated privileges
 
