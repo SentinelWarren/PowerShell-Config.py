@@ -14,8 +14,6 @@ def show_exception_and_exit(exc_type, exc_value, tb):
     sys.exit(-1)
 
 # Check if the current execution is run on elevated mode
-
-
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -43,6 +41,7 @@ def set_ps_exec_policy():
     return setting_policy
 
 
+# A function 
 def show_output(arg):
     global res
     while True:
@@ -114,14 +113,21 @@ def git_setup():
     print("Checking if hub exists else installing...")
     install_tool("hub")
 
-    print("Setting git environment...")
+    # Installing important PowerShell modules for working with git
+    ps_file = os.path.realpath("PowerShell-Config\get-module.ps1")
+    print("Installing additional PowerShell modules...")
+    show_output(ps_arg(ps_file))
+
+    print("\nSetting git environment...")
     ps_arg(
         r'if (-not (Test-Path $env:Path:"C:\Program Files\Git\usr\bin")) {[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Git\usr\bin", "Machine")}')
     print("git Env setup successfully! \n")
 
     print("Generating Ssh Key... \n")
     email = input("Enter your email > ")
-    key_name = input("Specify key name > ")
+    key_name = input("Specify key name, leave empty for default > ")
+    if key_name == "": key_name = "id_rsa"
+    
     generating_ssh_key = ps_arg(
         r'ssh-keygen -t rsa -b 4096 -C "{}" -f $env:USERPROFILE\.ssh\{}'.format(email, key_name))
     show_output(generating_ssh_key)
@@ -147,12 +153,20 @@ def git_setup():
 
     print("Adding Ssh-Agent...")
     show_output(ps_arg(r'Start-SshAgent;Add-SshKey $env:USERPROFILE\.ssh\{}'.format(key_name)))
+    user_env = show_output(ps_arg(r'$env:USERPROFILE'))
+    print(user_env)
     print("Ssh-Agent successfully added!\n")
 
     tst_auth = input_ans("Do you want to Test authentication to GitHub?(NOTE: Your public key should be added on your Github A/C first.) y/N > ")
     if tst_auth == True:
-        print("\nTesting authentication to GitHub...")
-        show_output(ps_arg(r'ssh -T git@github.com'))
+        which_github = input_ans("Do you use unique Organization github address?  y/N > ")
+        if which_github == True:
+            spec_url = input("Specify Organization github address > ")
+            print("\nTesting authentication to GitHub...")
+            show_output(ps_arg(r'ssh -T git@{}'.format(spec_url)))
+        else:
+            print("\nTesting authentication to GitHub...")
+            show_output(ps_arg(r'ssh -T git@github.com'))
     else:
         print("\nSkipping GitHub authentication test! \n")
 
@@ -166,9 +180,8 @@ def config_global_git():
     else:
         print("Global Git settings not configured \n")
 
+
 # A function to run specific commands with elevated privileges
-
-
 def run_as_admin():
 
     if is_admin():
