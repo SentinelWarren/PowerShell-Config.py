@@ -124,7 +124,6 @@ dmypy.json
 .venv/
 
 ### TestinggGrounds
-testing_logics.py
-define_logic_and _to_Imple.md
+.TestingGround/
 
 # End of https://www.gitignore.io/api/python
