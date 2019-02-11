@@ -1,20 +1,32 @@
 # PowerShell.py
+
 A simple python script to simplify and automate first time PowerShell configuration.
 
-## Features ##
-* Sets Execution Policy of LocalMachine to RemoteSigned in order to be able to execute scripts
-* Installing Chocolatey package management
-* Installing & configuring Git & hub
-* Generating Ssh key and configuring Github
-* Option to install in bulk any number of programs/tools
+## Features
 
-## Requirements ##
-* python3
+- Sets Execution Policy of LocalMachine to RemoteSigned in order to be able to execute scripts
+- Installing Chocolatey package management
+- Installing & configuring Git & hub
+- Generating Ssh key and configuring Github
+- Option to install in bulk any number of programs/tools
 
-## Installation ##
+## Requirements
 
-## Usage ##
+- python3
 
-## Todo ##
+## Installation
 
-**NOTE:** Its meant to simplify PowerShell first time setup on windows machine. 
+> [!NOTE]
+> To be added
+
+## Usage
+
+> [!NOTE]
+> To be added
+
+## Todo
+
+> [!NOTE]
+> To be added
+
+**NOTE:** Its meant to simplify PowerShell first time setup on windows machine.
