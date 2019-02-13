@@ -1,4 +1,4 @@
-# PowerShell.py
+# PowerShell-Config.py
 
 A simple python script to simplify and automate first time PowerShell configuration.
 
