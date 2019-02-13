@@ -114,7 +114,7 @@ def git_setup():
     install_tool("hub")
 
     # Installing important PowerShell modules for working with git
-    ps_file = os.path.realpath("PowerShell-Config\get-module.ps1")
+    ps_file = os.path.realpath("ps1\get-module.ps1")
     print("Installing additional PowerShell modules...")
     show_output(ps_arg(ps_file))
 
