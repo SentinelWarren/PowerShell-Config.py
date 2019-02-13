@@ -13,20 +13,25 @@ A simple python script to simplify and automate first time PowerShell configurat
 ## Requirements
 
 - python3
+- PowerShell >= v3
 
 ## Installation
 
-> [!NOTE]
-> To be added
+- Clone the repo
+>`git clone https://github.com/SentinelWarren/PowerShell-Config.py.git`
+
+>**OR**
+
+- Run the following command on PowerShell to download the zip
+> `Set-Location $env:USERPROFILE\Downloads;iwr -outf PowerShell-Config.py.zip https://github.com/Sent
+inelWarren/PowerShell-Config.py/archive/master.zip`
 
 ## Usage
 
-> [!NOTE]
-> To be added
+- `python config.py`
 
 ## Todo
 
-> [!NOTE]
 > To be added
 
 ## Contributing
