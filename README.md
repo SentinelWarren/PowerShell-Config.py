@@ -29,4 +29,9 @@ A simple python script to simplify and automate first time PowerShell configurat
 > [!NOTE]
 > To be added
 
+## Contributing
+
+- Open New Issue for a feature you want to add.
+- When accepted, send PR and we will review and merge
+
 **NOTE:** Its meant to simplify PowerShell first time setup on windows machine.
