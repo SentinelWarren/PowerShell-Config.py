@@ -146,8 +146,9 @@ def git_setup():
             See https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/ for more info\n""")
         
         op_tut = input_ans("Do you want to open the tutorial right now? y/N > ")
-        if op_tut == True: webbrowser.open("https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account")
-        print("New Tutorial Tab successfully opened! \n")
+        if op_tut == True:
+            webbrowser.open("https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account")
+            print("New Tutorial Tab successfully opened! \n")
     else:
         print("Key not copied! \n")
 
