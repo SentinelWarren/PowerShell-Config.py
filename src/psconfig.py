@@ -3,15 +3,8 @@ import os
 import subprocess
 import sys
 from shutil import which
-from threading import Timer
-import traceback
 import webbrowser
 
-
-def show_exception_and_exit(exc_type, exc_value, tb):
-
-    traceback.print_exception(exc_type, exc_value, tb)
-    sys.exit(-1)
 
 # Check if the current execution is run on elevated mode
 def is_admin():
@@ -41,7 +34,7 @@ def set_ps_exec_policy():
     return setting_policy
 
 
-# A function 
+# A function read out subprocess output
 def show_output(arg):
     global res
     while True:
@@ -51,7 +44,7 @@ def show_output(arg):
         if output:
             res = sys.stdout.write(output.decode('utf-8'))
             sys.stdout.flush()
-    
+
     return res
 
 
@@ -91,7 +84,7 @@ def install_tool(prog):
         else:
             print("{} already exist! \n".format(i))
 
-
+#A fun to gather user input answer
 def input_ans(arg):
     yes = {'yes', 'y', 'ye', ''}
     no = {'no', 'n'}
@@ -102,19 +95,20 @@ def input_ans(arg):
         elif choice in no:
             return False
         else:
-            sys.stdout.write("Please respond with 'yes' or 'no' \n")
+            print("Please respond with 'yes' or 'no' \n")
 
 
+#A func for git initial setup
 def git_setup():
 
     print("Checking if git exists else installing...")
     install_tool("git")
-    
+
     print("Checking if hub exists else installing...")
     install_tool("hub")
 
     # Installing important PowerShell modules for working with git
-    ps_file = os.path.realpath("ps1\get-module.ps1")
+    ps_file = os.path.realpath("ps1\\get-module.ps1")
     print("Installing additional PowerShell modules...")
     show_output(ps_arg(ps_file))
 
@@ -126,8 +120,9 @@ def git_setup():
     print("Generating Ssh Key... \n")
     email = input("Enter your email > ")
     key_name = input("Specify key name, leave empty for default > ")
-    if key_name == "": key_name = "id_rsa"
-    
+    if key_name == "":
+        key_name = "id_rsa"
+
     generating_ssh_key = ps_arg(
         r'ssh-keygen -t rsa -b 4096 -C "{}" -f $env:USERPROFILE\.ssh\{}'.format(email, key_name))
     show_output(generating_ssh_key)
@@ -144,23 +139,28 @@ def git_setup():
         print("""\nThe above key is successfully copied to clipboard! \n
             You can now Add the public key to your GitHub A/C\n
             See https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/ for more info\n""")
-        
-        op_tut = input_ans("Do you want to open the tutorial right now? y/N > ")
+
+        op_tut = input_ans(
+            "Do you want to open the tutorial right now? y/N > ")
         if op_tut == True:
-            webbrowser.open("https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account")
+            webbrowser.open(
+                "https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account")
             print("New Tutorial Tab successfully opened! \n")
     else:
         print("Key not copied! \n")
 
     print("Adding Ssh-Agent...")
-    show_output(ps_arg(r'Start-SshAgent;Add-SshKey $env:USERPROFILE\.ssh\{}'.format(key_name)))
+    show_output(
+        ps_arg(r'Start-SshAgent;Add-SshKey $env:USERPROFILE\.ssh\{}'.format(key_name)))
     user_env = show_output(ps_arg(r'$env:USERPROFILE'))
     print(user_env)
     print("Ssh-Agent successfully added!\n")
 
-    tst_auth = input_ans("Do you want to Test authentication to GitHub?(NOTE: Your public key should be added on your Github A/C first.) y/N > ")
+    tst_auth = input_ans(
+        "Do you want to Test authentication to GitHub?(NOTE: Your public key should be added on your Github A/C first.) y/N > ")
     if tst_auth == True:
-        which_github = input_ans("Do you use unique Organization github address?  y/N > ")
+        which_github = input_ans(
+            "Do you use unique Organization github address?  y/N > ")
         if which_github == True:
             spec_url = input("Specify Organization github address > ")
             print("\nTesting authentication to GitHub...")
@@ -173,10 +173,12 @@ def git_setup():
 
 
 def config_global_git():
-    config_ans = input_ans("Do you want to Configure global Git settings? y/N > ")
+    config_ans = input_ans(
+        "Do you want to Configure global Git settings? y/N > ")
 
     if config_ans == True:
-        email, username = input("Enter Your Github email address and username separated with space respectively > ").split()
+        email, username = input(
+            "Enter Your Github email address and username separated with space respectively > ").split()
         ps_arg(r'git config --global user.email {};git config --global user.name {};git config --global push.default simple;git config --global core.ignorecase false;git config --global core.autocrlf true'.format(email, username))
     else:
         print("Global Git settings not configured \n")
@@ -208,4 +210,3 @@ def run_as_admin():
 
 if __name__ == "__main__":
     run_as_admin()
-    sys.excepthook = show_exception_and_exit
