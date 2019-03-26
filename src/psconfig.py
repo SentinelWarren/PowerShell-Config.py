@@ -14,7 +14,7 @@ def is_admin():
         return False
 
 
-# Define subprocess.Popen to execute PowerShell commands
+# Define subprocess.Popen func to execute PowerShell commands
 def ps_arg(rarg):
     sub = subprocess.Popen
     ps = 'powershell.exe'
@@ -24,21 +24,11 @@ def ps_arg(rarg):
     return cmd
 
 
-# A function to Set-ExecutionPolicy on windows system
-def set_ps_exec_policy():
-    print("Setting Execution Policy...")
-    setting_policy = ps_arg(
-        r'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force')
-    print("Execution Policy Setup Successfully! \n")
-
-    return setting_policy
-
-
 # A function read out subprocess output
 def show_output(arg):
     global res
     while True:
-        output = arg.stdout.readline(1)
+        output = arg.stdout.readline()
         if output == b'' and arg.poll() is not None:
             break
         if output:
@@ -46,6 +36,20 @@ def show_output(arg):
             sys.stdout.flush()
 
     return res
+
+
+# A function to Set-ExecutionPolicy on windows system
+def set_ps_exec_policy():
+    print("Checking if Execution Policy is set...")
+    check_exe_policy = (subprocess.run(
+        ['powershell.exe', 'Get-ExecutionPolicy'], stdout=subprocess.PIPE).stdout.decode('utf-8')).strip()
+
+    if check_exe_policy == 'RemoteSigned':
+        print("Execution Policy is already set to '{}'\n".format(check_exe_policy))
+    else:
+        print("Setting Execution Policy...")
+        ps_arg(r'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force')
+        print("Execution Policy Setup Successfully! \n")
 
 
 # A function to check if the tool/program 'to-be' installed is already available on the system
@@ -84,7 +88,8 @@ def install_tool(prog):
         else:
             print("{} already exist! \n".format(i))
 
-#A fun to gather user input answer
+
+# A fun to gather user input answer
 def input_ans(arg):
     yes = {'yes', 'y', 'ye', ''}
     no = {'no', 'n'}
@@ -98,7 +103,7 @@ def input_ans(arg):
             print("Please respond with 'yes' or 'no' \n")
 
 
-#A func for git initial setup
+# A func for git initial setup
 def git_setup():
 
     print("Checking if git exists else installing...")
