@@ -25,9 +25,11 @@ A simple python script to simplify and automate first time PowerShell configurat
 
 - Run the following command on PowerShell to set Downloading folder location and download the zip
 
-    `Set-Location "to\the\downloads\folder";iwr -outf PowerShell-Config.py.zip https://github.com/SentinelWarren/PowerShell-Config.py/archive/master.zip`
+    `Set-Location "to\the\downloads\folder";iwr -outf PowerShell-Config.py.zip https://github.com/Sent
+inelWarren/PowerShell-Config.py/archive/master.zip`
     
-i.e; 
+    i.e; 
+    
     `Set-Location $env:USERPROFILE\Downloads;iwr -outf PowerShell-Config.py.zip https://github.com/Sent
 inelWarren/PowerShell-Config.py/archive/master.zip`
 
